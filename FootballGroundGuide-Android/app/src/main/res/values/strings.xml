@@ -1,0 +1,32 @@
+<resources>
+    <string name="app_name">Football Ground Guide</string>
+    //General
+    <string name="string_yes">Yes</string>
+    <string name="string_no">No</string>
+    //Login
+    <string name="register_account">No account yet? Create one</string>
+    <string name="login">Login</string>
+    <string name="forgot_password">Forgot your Password?</string>
+    <string name="remember_me">Remember this Account?</string>
+
+    //Create Account
+    <string name="hint_first_name">First Name</string>
+    <string name="hint_last_name">Last Name</string>
+    <string name="hint_username">UserName</string>
+    <string name="hint_email">Email Address</string>
+    <string name="hint_password">Password</string>
+    <string name="hint_confirm_password">Confirm Password</string>
+    <string name="account_created">Already have an account?</string>
+
+    //Connection warnings
+    <string name="dialog_internet_title">No Internet connection</string>
+    <string name="dialog_internet_message">Please check your Internet connection and try again.</string>
+
+
+    //Set Favourite Team Dialog
+    <string name="dialog_set_fav_team_title">Set Favourite Team.</string>
+    <string name="dialog_set_fav_team_message">Set as your Favourite Team?</string>
+
+
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+</resources>
