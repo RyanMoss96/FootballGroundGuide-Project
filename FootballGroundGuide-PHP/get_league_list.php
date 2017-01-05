@@ -8,7 +8,7 @@ $data = json_decode( $json);
 $ground_option = $data->country;
 
 
-$query = $conn->query("SELECT leagues.league_name FROM leagues INNER JOIN countries on leagues.country_id=countries.country_id WHERE countries.country_name = '$ground_option' ");
+$query = $conn->query("SELECT leagues.league_name FROM leagues INNER JOIN countries on leagues.country_id = countries.country_id WHERE countries.country_name = '$ground_option' ");
 
 
 

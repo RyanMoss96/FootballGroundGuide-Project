@@ -1,5 +1,6 @@
 package uk.co.ryanmoss.footballgroundguide_android;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
@@ -51,6 +52,7 @@ public class GroundProfileActivity extends AppCompatActivity {
     private ImageView mImageView;
 
     private String strTeamName;
+    private ProgressDialog progress;
 
 
 
@@ -59,6 +61,13 @@ public class GroundProfileActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ground_profile);
+
+        progress = new ProgressDialog(ctx);
+
+        progress.setMessage("Stadium Data Loading");
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setIndeterminate(true);
+        progress.show();
 
 
         groundProfileToolbar = (Toolbar) findViewById(R.id.footballGroundAppBar);
@@ -76,6 +85,8 @@ public class GroundProfileActivity extends AppCompatActivity {
         mImageView = (ImageView) findViewById(R.id.imageView);
         getStadiumImage("http://46.101.2.231/FootballGroundGuide/stadium_images/deepdale1.jpg");
         getStadiumData(strTeamName);
+
+        progress.dismiss();
 
     }
 

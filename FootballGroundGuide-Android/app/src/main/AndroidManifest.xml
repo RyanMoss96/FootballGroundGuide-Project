@@ -3,6 +3,11 @@
     package="uk.co.ryanmoss.footballgroundguide_android">
 
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+
+    <uses-feature android:name="android.hardware.camera"
+        android:required="false" />
 
     <application
         android:allowBackup="true"
@@ -17,11 +22,13 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".GroundProfileActivity" />
         <activity android:name=".RegisterActivity" />
+        <activity android:name=".ForgotPasswordActivity" />
         <activity android:name=".UserHomeActivity" />
-        <activity android:name=".GroundVisitedActivity" />
-        <activity android:name=".ForgotPasswordActivity"></activity>
+        <activity
+            android:name=".GroundProfileActivity"
+            android:parentActivityName=".UserHomeActivity"></activity>
+        <activity android:name=".GroundVisitedActivity"></activity>
     </application>
 
 </manifest>

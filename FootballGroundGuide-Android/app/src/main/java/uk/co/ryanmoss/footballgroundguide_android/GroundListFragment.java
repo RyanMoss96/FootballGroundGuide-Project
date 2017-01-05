@@ -1,5 +1,6 @@
 package uk.co.ryanmoss.footballgroundguide_android;
 
+import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.Intent;
 import android.net.Uri;
@@ -31,7 +32,10 @@ public class GroundListFragment extends Fragment {
     private String GROUND_URL = "http://46.101.2.231/FootballGroundGuide/get_ground_list.php";
     private static final String TAG = "GroundList";
     private String result;
-    ListView groundListView;
+    private ListView groundListView;
+
+    private ProgressDialog progress;
+
     public GroundListFragment() {
         // Required empty public constructor
     }
@@ -60,6 +64,13 @@ public class GroundListFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
         // Check whether we're recreating a previously destroyed instance
 
+        progress = new ProgressDialog(getActivity());
+
+        progress.setMessage("Loading Countries");
+        progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+        progress.setIndeterminate(true);
+        progress.show();
+
         result  = this.getArguments().getString("league");
 
 
@@ -74,6 +85,8 @@ public class GroundListFragment extends Fragment {
             ArrayAdapter<String> groundAdapter = new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, listContent);
             groundListView.setAdapter(groundAdapter);
+
+            progress.dismiss();
 
             groundListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view,

@@ -28,8 +28,9 @@ public class CountryListFragment extends Fragment {
 
 
 
-    private String COUNTRY_URL = "http://46.101.2.231/FootballGroundGuide/get_country_list.php";
-    private static final String TAG = "GroundFragment";
+    //private String COUNTRY_URL = "http://46.101.2.231/FootballGroundGuide/get_country_list.php";
+    private String COUNTRY_URL = "http://178.62.121.73/countries";
+    private static final String TAG = "CountryFragment";
     ListView groundListView;
     FragmentController leagueController;
 
@@ -108,7 +109,7 @@ public class CountryListFragment extends Fragment {
 
 
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                Request.Method.POST,COUNTRY_URL, js,
+                Request.Method.GET,COUNTRY_URL, js,
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
