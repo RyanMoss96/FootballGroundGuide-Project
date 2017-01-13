@@ -28,7 +28,8 @@ import java.util.ArrayList;
 
 public class LeagueListFragment extends Fragment {
 
-    private String LEAGUE_URL = "http://46.101.2.231/FootballGroundGuide/get_league_list.php";
+    //private String LEAGUE_URL = "http://46.101.2.231/FootballGroundGuide/get_league_list.php";
+    private String LEAGUE_URL = "http://178.62.121.73/leagues/";
     private static final String TAG = "LeagueList";
     private String result;
     ListView leagueListView;
@@ -97,12 +98,14 @@ public class LeagueListFragment extends Fragment {
 
     public void getLeagues(String country) {
 
-        JSONObject js = new JSONObject();
-        try{
-            js.put("country", country);
+        String URL = LEAGUE_URL + country;
+        Log.d(TAG, URL);
+
+
+
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                    Request.Method.POST,LEAGUE_URL, js,
+                    Request.Method.GET,URL, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -123,10 +126,6 @@ public class LeagueListFragment extends Fragment {
             });
 
             VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-        } catch (JSONException e)
-        {
-
-        }
 
 
     }

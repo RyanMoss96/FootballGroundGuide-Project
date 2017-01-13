@@ -29,7 +29,8 @@ import java.util.ArrayList;
 
 public class GroundListFragment extends Fragment {
 
-    private String GROUND_URL = "http://46.101.2.231/FootballGroundGuide/get_ground_list.php";
+    //private String GROUND_URL = "http://46.101.2.231/FootballGroundGuide/get_ground_list.php";
+    private String GROUND_URL = "http://178.62.121.73/grounds/";
     private static final String TAG = "GroundList";
     private String result;
     private ListView groundListView;
@@ -106,12 +107,10 @@ public class GroundListFragment extends Fragment {
 
     public void getGrounds(String league) {
 
-        JSONObject js = new JSONObject();
-        try{
-            js.put("league", league);
+            String BASE_URL = GROUND_URL + league;
             Log.d(TAG, league);
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                    Request.Method.POST,GROUND_URL, js,
+                    Request.Method.GET,BASE_URL, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -132,12 +131,6 @@ public class GroundListFragment extends Fragment {
             });
 
             VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-        } catch (JSONException e)
-        {
-            Log.e(TAG, e.toString());
-        }
-
-
     }
 
 
@@ -145,7 +138,7 @@ public class GroundListFragment extends Fragment {
     {
         ArrayList<String> responseList = new ArrayList<>();
         try{
-            JSONArray listArray = response.getJSONArray("grounds");
+            JSONArray listArray = response.getJSONArray("teams");
             for(int i = 0; i < listArray.length();i++)
             {
                 JSONObject row = listArray.getJSONObject(i);

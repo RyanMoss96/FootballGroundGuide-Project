@@ -17,5 +17,22 @@ class UserController extends Controller
          $users = DB::table('users')->where('username', $username)->first();
          return response()->json($users);
     }
+
+    public function store(Request $request) {
+        $data = $request->all();
+
+        $username = $data['username'];
+        $firstname = $data['first_name'];
+        $lastname = $data['last_name'];
+        $email = $data['email'];
+        $password = $data['password'];
+
+        $hash = password_hash($password, PASSWORD_BCRYPT);
+
+        DB::table('users')->insert(
+            ['firstname' => $firstname, 'lastname' => $lastname, 'username' => $username, 'email' => $email, 'encrypted_password' => $hash]
+        );
+
+    }
    
 }

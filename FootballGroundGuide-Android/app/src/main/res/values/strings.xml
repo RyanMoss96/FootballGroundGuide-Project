@@ -29,4 +29,8 @@
 
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+    //Friends Fragment
+    <string name="hint_friend_search">Search for Friends</string>
 </resources>

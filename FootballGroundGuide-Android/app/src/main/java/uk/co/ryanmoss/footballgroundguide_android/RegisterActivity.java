@@ -39,7 +39,8 @@ public class RegisterActivity extends AppCompatActivity {
     EditText txtConfirmPass;
     Button btnRegister;
     final Context ctx = this;
-    private String REGISTER_URL = "http://46.101.2.231/FootballGroundGuide/register_account.php";
+    //private String REGISTER_URL = "http://46.101.2.231/FootballGroundGuide/register_account.php";
+    private String REGISTER_URL = "http://178.62.121.73/users";
     private static final String TAG = "RegisterActivity";
 
     @Override
@@ -85,14 +86,6 @@ public class RegisterActivity extends AppCompatActivity {
                                             {
                                                 if(password.equals(confirmPassword))
                                                 {
-
-
-                                                    List<Pair<String, String>> args = new ArrayList<>();
-                                                    args.add(new Pair<>("username", username));
-                                                    args.add(new Pair<>("first_name", firstName));
-                                                    args.add(new Pair<>("last_name", lastName));
-                                                    args.add(new Pair<>("email", email));
-                                                    args.add(new Pair<>("password", password));
 
                                                     JSONObject js = new JSONObject();
 
