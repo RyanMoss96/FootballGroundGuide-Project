@@ -42,4 +42,6 @@
     <string name="label_trains">By Train</string>
     <string name="label_cars">By Car</string>
     <string name="label_reviews">Reviews</string>
+    <string name="label_directions">Directions</string>
+    <string name="label_description">Details</string>
 </resources>
