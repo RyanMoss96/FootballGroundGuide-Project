@@ -20,9 +20,5 @@ class CountryController extends Controller
 
         echo json_encode ( $response );
     }
-
-    public function leagues()
-{
-return $this->hasMany('App\League');
-}
+    
 }

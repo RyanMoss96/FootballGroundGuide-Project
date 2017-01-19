@@ -78,7 +78,7 @@ public class GroundProfileActivity extends AppCompatActivity {
         groundProfileToolbar.setTitle(strTeamName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
 
-        teamID = (TextView) findViewById(R.id.txtTeamID);
+
         teamName = (TextView) findViewById(R.id.txtTeamName);
         teamFounded = (TextView) findViewById(R.id.txtTeamFounded);
         teamStadiumName = (TextView) findViewById(R.id.txtTeamStadiumName);
@@ -149,7 +149,7 @@ public class GroundProfileActivity extends AppCompatActivity {
 
     private void setGroundProfileTextInfo()
     {
-        teamID.setText(stadiumDetails.getTeamID());
+
         teamName.setText(stadiumDetails.getTeamName());
         teamFounded.setText(stadiumDetails.getTeamFounded());
         teamStadiumName.setText(stadiumDetails.getTeamStadiumName());

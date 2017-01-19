@@ -33,4 +33,13 @@
 
     //Friends Fragment
     <string name="hint_friend_search">Search for Friends</string>
+
+
+    //Ground Profile
+    <string name="label_stadium">Stadium: </string>
+    <string name="label_founded">Founded: </string>
+    <string name="label_travel">Travel</string>
+    <string name="label_trains">By Train</string>
+    <string name="label_cars">By Car</string>
+    <string name="label_reviews">Reviews</string>
 </resources>
