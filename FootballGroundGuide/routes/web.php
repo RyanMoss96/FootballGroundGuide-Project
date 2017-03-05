@@ -15,17 +15,25 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::resource('users', 'UserController');
-Route::resource('account', 'AccountController')
 
 
 Route::resource('countries', 'CountryController');
 Route::resource('leagues', 'LeagueController');
-Route::resource('grounds', 'GroundController');
+
 
 
 Auth::routes();
 
 Route::get('/home', 'HomeController@index');
+
+Route::post('/users/register', 'UserController@register');
+Route::post('/users/login', 'UserController@login');
+Route::get('/users/{username}', 'UserController@show');
+Route::get('/users/followers/{id}', 'UserController@followers');
+
+
+Route::get('/grounds/{league}', 'GroundController@show');
+Route::get('/grounds/data/{team}', 'GroundController@data');
+Route::post('/grounds/visited/', 'GroundController@visited');
 
 

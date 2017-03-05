@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 
 class AccountController extends Controller
 {
+
     public function store(Request $request) {
         $data = $request->all();
 

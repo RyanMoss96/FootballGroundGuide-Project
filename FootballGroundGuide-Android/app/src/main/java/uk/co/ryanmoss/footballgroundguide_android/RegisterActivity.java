@@ -27,6 +27,8 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
+import es.dmoral.toasty.Toasty;
+
 
 public class RegisterActivity extends AppCompatActivity {
 
@@ -40,7 +42,7 @@ public class RegisterActivity extends AppCompatActivity {
     Button btnRegister;
     final Context ctx = this;
     //private String REGISTER_URL = "http://46.101.2.231/FootballGroundGuide/register_account.php";
-    private String REGISTER_URL = "http://178.62.121.73/users";
+    private String REGISTER_URL = "http://178.62.121.73/users/register";
     private static final String TAG = "RegisterActivity";
 
     @Override
@@ -103,8 +105,10 @@ public class RegisterActivity extends AppCompatActivity {
                                                                     public void onResponse(JSONObject response) {
                                                                         Log.d(TAG, response.toString());
 
-                                                                        Toast toast = Toast.makeText(ctx, "Account created, you may now login", Toast.LENGTH_SHORT);
-                                                                        toast.show();
+                                                                        //Toast toast = Toast.makeText(ctx, "Account created, you may now login", Toast.LENGTH_SHORT);
+                                                                        //toast.show();
+
+                                                                        Toasty.success(ctx, "Account Created!", Toast.LENGTH_SHORT, true).show();
 
                                                                         showLoginScreen();
 

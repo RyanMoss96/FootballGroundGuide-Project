@@ -2,6 +2,7 @@ package uk.co.ryanmoss.footballgroundguide_android;
 
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -29,8 +30,8 @@ public class RootFragment extends Fragment {
        /* Inflate the layout for this fragment */
         View view = inflater.inflate(R.layout.fragment_root, container, false);
 
-        FragmentTransaction transaction = getFragmentManager()
-                .beginTransaction();
+        FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
+        FragmentTransaction transaction = fragmentManager.beginTransaction();
 
         transaction.replace(R.id.root_frame, new CountryListFragment());
 

@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Base64;
 import android.util.Log;
 import android.view.View;
@@ -43,13 +44,16 @@ public class GroundVisitedActivity extends AppCompatActivity {
     private Button btnUpload;
 
     private Bitmap bitmap;
+    private Bitmap resized;
 
+    private Toolbar groundVisitedToolbar;
 
     static final int REQUEST_IMAGE_CAPTURE = 1;
     private int PICK_IMAGE_REQUEST = 1;
 
     private static final String TAG = "GroundVisitedActivity";
-    private String UPLOAD_URL ="http://46.101.2.231/FootballGroundGuide/ground_visited.php";
+    //private String UPLOAD_URL ="http://46.101.2.231/FootballGroundGuide/ground_visited.php";
+    private String UPLOAD_URL ="http://178.62.121.73/grounds/visited";
     final Context ctx = this;
 
     @Override
@@ -57,9 +61,14 @@ public class GroundVisitedActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_ground_visited);
 
+        groundVisitedToolbar = (Toolbar) findViewById(R.id.footballVisitedAppBar);
+        setSupportActionBar(groundVisitedToolbar);
+
         btnCamera = (ImageButton) findViewById(R.id.btn_image);
         btnUpload = (Button) findViewById(R.id.btn_upload);
         txtDesc = (EditText) findViewById(R.id.txt_description);
+
+        String groundID = getIntent().getExtras().getString("ground_id");
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -94,9 +103,9 @@ public class GroundVisitedActivity extends AppCompatActivity {
             try {
                 //Getting the Bitmap from Gallery
                 bitmap = MediaStore.Images.Media.getBitmap(getContentResolver(), filePath);
+                resized = Bitmap.createScaledBitmap(bitmap,(int)(bitmap.getWidth()*0.4), (int)(bitmap.getHeight()*0.4), true);
                 //Setting the Bitmap to ImageView
-                btnCamera.setImageBitmap(bitmap);
-
+                btnCamera.setImageBitmap(resized);
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -130,12 +139,14 @@ public class GroundVisitedActivity extends AppCompatActivity {
         JSONObject js = new JSONObject();
         String name = txtDesc.getText().toString();
 
+
+
         Toast.makeText(ctx, name, Toast.LENGTH_LONG).show();
         try{
-            js.put("image", getStringImage(bitmap));
+            js.put("image", getStringImage(resized));
             js.put("name", name );
 
-            Log.e("js",  getStringImage(bitmap));
+            Log.e("js",  getStringImage(resized));
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                     Request.Method.POST,UPLOAD_URL, js,
                     new Response.Listener<JSONObject>() {

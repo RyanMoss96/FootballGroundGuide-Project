@@ -42,4 +42,9 @@
     <string name="label_directions">Directions</string>
     <string name="label_description">Details</string>
     <string name="label_capacity">Capacity: </string>
+    <string name="button_visited">Mark as Visited!</string>
+
+    //Ground Visited
+    <string name="button_upload">Upload</string>
+
 </resources>

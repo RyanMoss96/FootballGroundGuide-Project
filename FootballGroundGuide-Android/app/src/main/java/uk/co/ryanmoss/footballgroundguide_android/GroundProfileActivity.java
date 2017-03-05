@@ -18,6 +18,8 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
+import android.view.View;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -34,13 +36,16 @@ import com.squareup.picasso.Picasso;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
 public class GroundProfileActivity extends AppCompatActivity {
 
-    private String STADIUM_URL = "http://46.101.2.231/FootballGroundGuide/get_stadium_data.php";
+    //private String STADIUM_URL = "http://46.101.2.231/FootballGroundGuide/get_stadium_data.php";
+    private String STADIUM_URL = "http://178.62.121.73/grounds/data/";
     private String FAVOURITE_URL = "http://46.101.2.231/FootballGroundGuide/set_favourite_team.php";
+    private String VISITED_URL = "http://178.62.121.73/grounds/visited";
     private static final String TAG = "GroundProfile";
     final Context ctx = this;
     private FootballStadiumClass stadiumDetails;
@@ -49,7 +54,12 @@ public class GroundProfileActivity extends AppCompatActivity {
     private TextView teamName;
     private TextView teamFounded;
     private TextView teamStadiumName;
+    private TextView byTrain;
+    private TextView byCar;
+    private TextView capacity;
     private ImageView mImageView;
+    private Button btnVisited;
+
 
     private String strTeamName;
     private ProgressDialog progress;
@@ -82,12 +92,25 @@ public class GroundProfileActivity extends AppCompatActivity {
         teamName = (TextView) findViewById(R.id.txtTeamName);
         teamFounded = (TextView) findViewById(R.id.txtTeamFounded);
         teamStadiumName = (TextView) findViewById(R.id.txtTeamStadiumName);
+        byTrain = (TextView) findViewById(R.id.txtTrainInfo);
+        byCar = (TextView) findViewById(R.id.txtCarInfo);
+        capacity = (TextView) findViewById(R.id.txtCapacity);
         mImageView = (ImageView) findViewById(R.id.imageView);
+
+        btnVisited = (Button) findViewById(R.id.VisitedButton);
         getStadiumImage("http://46.101.2.231/FootballGroundGuide/stadium_images/deepdale1.jpg");
         getStadiumData(strTeamName);
 
         progress.dismiss();
 
+        btnVisited.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent groundVisited = new Intent(v.getContext(), GroundVisitedActivity.class);
+                groundVisited.putExtra("ground_id", stadiumDetails.getTeamID());
+                startActivity(groundVisited);
+            }
+        });
 
 
     }
@@ -116,12 +139,13 @@ public class GroundProfileActivity extends AppCompatActivity {
 
         Log.d(TAG, stadium);
 
-        try{
-            JSONObject js = new JSONObject();
-            js.put("stadium", stadium);
+
+
+
+            String URL = STADIUM_URL + stadium;
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                    Request.Method.POST,STADIUM_URL, js,
+                    Request.Method.GET,URL, null,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -141,20 +165,19 @@ public class GroundProfileActivity extends AppCompatActivity {
             });
 
             VolleyRequestQueue.getInstance(ctx).addToRequestQueue(jsonObjReq);
-        } catch (JSONException e)
-        {
-            Log.d(TAG, e.toString());
-        }
+
 
     }
 
 
     private void setGroundProfileTextInfo()
     {
-
         teamName.setText(stadiumDetails.getTeamName());
         teamFounded.setText(stadiumDetails.getTeamFounded());
         teamStadiumName.setText(stadiumDetails.getTeamStadiumName());
+        byTrain.setText(stadiumDetails.getTrainInfo());
+        byCar.setText(stadiumDetails.getCarInfo());
+        capacity.setText(stadiumDetails.getCapacity());
     }
 
     private void getStadiumImage(String image_url)
@@ -227,6 +250,10 @@ public class GroundProfileActivity extends AppCompatActivity {
 
         }
 
+
+    }
+
+    private void markVisited() {
 
     }
 

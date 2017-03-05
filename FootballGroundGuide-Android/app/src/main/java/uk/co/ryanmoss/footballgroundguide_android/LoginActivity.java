@@ -15,6 +15,7 @@ import android.widget.Button;
 import android.widget.EditText;
 import android.widget.RadioButton;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -24,6 +25,8 @@ import com.android.volley.toolbox.JsonObjectRequest;
 
 import org.json.JSONException;
 import org.json.JSONObject;
+
+import es.dmoral.toasty.Toasty;
 
 public class LoginActivity extends AppCompatActivity {
 
@@ -36,7 +39,8 @@ public class LoginActivity extends AppCompatActivity {
 
 
     final Context ctx = this;
-    private String REGISTER_URL = "http://46.101.2.231/FootballGroundGuide/login.php";
+    //private String LOGIN_URL = "http://46.101.2.231/FootballGroundGuide/login.php";
+    private String LOGIN_URL = "http://178.62.121.73/users/login";
     private static final String TAG = "LoginActivity";
     private static final String PREFS_NAME = "UserDetails";
 
@@ -111,7 +115,7 @@ public class LoginActivity extends AppCompatActivity {
 
             Log.e("js", js.toString());
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
-                    Request.Method.POST, REGISTER_URL, js,
+                    Request.Method.POST, LOGIN_URL, js,
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
@@ -125,7 +129,7 @@ public class LoginActivity extends AppCompatActivity {
                                     firstname = response.getString("first_name");
                                     lastname = response.getString("last_name");
                                     emailAddress = response.getString("email");
-                                    userRole = response.getString("user_role");
+
                                     uid = response.getString("uid");
 
 
@@ -141,16 +145,17 @@ public class LoginActivity extends AppCompatActivity {
                                         editor.putString("firstName", firstname);
                                         editor.putString("lastName", lastname);
                                         editor.putString("email", emailAddress);
-                                        editor.putString("userRole", userRole);
+
                                         editor.putString("uid", uid);
 
                                         editor.commit();
 
                                     }
 
+                                    Toasty.success(ctx, "Successful Login!", Toast.LENGTH_SHORT, true).show();
 
-                                    Intent organisationsIntent = new Intent(ctx, UserHomeActivity.class);
-                                    startActivity(organisationsIntent);
+                                    Intent homeIntent = new Intent(ctx, UserHomeActivity.class);
+                                    startActivity(homeIntent);
 
 
                                 } else if (strSuccess.equals("0")) {

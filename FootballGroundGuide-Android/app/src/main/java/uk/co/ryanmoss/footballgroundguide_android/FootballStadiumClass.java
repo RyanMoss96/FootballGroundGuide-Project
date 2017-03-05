@@ -15,6 +15,9 @@ public class FootballStadiumClass {
     private String mName;
     private String mFounded;
     private String mStadiumName;
+    private String mTrain;
+    private String mCar;
+    private String mCapacity;
     private String mDefaultImage;
 
     public FootballStadiumClass(JSONObject response)
@@ -28,6 +31,9 @@ public class FootballStadiumClass {
             mName = row.getString("team_name");
             mFounded = row.getString("founded");
             mStadiumName= row.getString("stadium_name");
+            mTrain = row.getString("by_train");
+            mCar = row.getString("by_car");
+            mCapacity = row.getString("capacity");
 
         } catch (JSONException e)
         {
@@ -55,6 +61,10 @@ public class FootballStadiumClass {
         return mStadiumName;
     }
 
+    public String getTrainInfo() { return mTrain;}
 
+    public String getCarInfo() { return mCar;}
+
+    public String getCapacity() { return mCapacity; }
 
 }

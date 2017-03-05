@@ -29,7 +29,9 @@
         <activity
             android:name=".GroundProfileActivity"
             android:parentActivityName=".UserHomeActivity"></activity>
-        <activity android:name=".GroundVisitedActivity"></activity>
+        <activity
+            android:name=".GroundVisitedActivity"
+            android:parentActivityName=".GroundProfileActivity"></activity>
 
         <meta-data
             android:name="com.google.android.gms.version"

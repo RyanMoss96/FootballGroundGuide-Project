@@ -7,6 +7,8 @@ use DB;
 
 class UserController extends Controller
 {
+
+    
     public function index()
     {
         $users = DB::select('select * from users');
@@ -18,8 +20,8 @@ class UserController extends Controller
          return response()->json($users);
     }
 
-    public function store(Request $request) {
-        $data = $request->all();
+    public function register(Request $request) {
+         $data = $request->all();
 
         $username = $data['username'];
         $firstname = $data['first_name'];
@@ -33,6 +35,79 @@ class UserController extends Controller
             ['firstname' => $firstname, 'lastname' => $lastname, 'username' => $username, 'email' => $email, 'encrypted_password' => $hash]
         );
 
+        $response = array();
+
+        $response["code"] = "1";
+        $response["message"] = "Account Created Successfully";
+        
+        echo json_encode ( $response );
+
+    }
+
+    public function login(Request $request) {
+        $data = $request->all();
+
+        $username = $data['username'];
+        $password = $data['password'];
+
+        $users = DB::table('users')->where('username', $username)->get();
+
+        
+        $response = array();
+
+        if($users->count())
+        {   
+             foreach($users as $user) {
+                $uid = $user->uid;
+                $firstName = $user->firstname;
+                $lastName = $user->lastname;
+                $userName = $user->username;
+                $email = $user->email;
+                $hashedPassword = $user->encrypted_password;
+            }
+
+            if(password_verify($password, $hashedPassword))
+            {
+                $response["code"] = 1;
+                $response["message"] = "Login Success";
+
+                $response["uid"] = $uid;
+                $response["first_name"] = $firstName;
+                $response["last_name"] = $lastName;
+                $response["username"] = $userName;
+                $response["email"] = $email;
+                $response["encrypted_password"] = $hashedPassword;
+                
+
+            } else {
+                $response["code"] = 0;
+                $response["message"] = "Incorrect Password.";
+            }
+
+        } else {
+
+            $response["code"] = 2;
+            $response["message"] = "Incorrect Username";
+        }
+
+        echo json_encode ( $response );
+    }
+
+    public function followers($id) {
+ 
+    $followers = DB::table('users')
+                    ->select('username')
+                    ->join('friends', 'friends.user_two', '=', 'users.uid')
+                    ->where('friends.user_one', $id)
+                    ->get();
+
+            $response = array();
+
+        foreach($followers as $follower) {
+            $response["follower"][] = $follower;
+        }
+
+        return response()->json($response);
     }
    
 }
