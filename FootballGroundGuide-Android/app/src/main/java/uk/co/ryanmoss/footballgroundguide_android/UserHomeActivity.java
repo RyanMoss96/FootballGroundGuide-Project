@@ -62,7 +62,7 @@ public class UserHomeActivity extends AppCompatActivity implements FragmentContr
 
     private void setupViewPager(ViewPager viewPager) {
         ViewPagerAdapter adapter = new ViewPagerAdapter(getSupportFragmentManager());
-        adapter.addFragment(new UserProfileFragment(), "Home");
+        adapter.addFragment(new UserProfileFragment().newInstance(), "Home");
         adapter.addFragment(new RootFragment(), "Grounds");
         adapter.addFragment(new UserSettingsFragment(), "Friends");
 

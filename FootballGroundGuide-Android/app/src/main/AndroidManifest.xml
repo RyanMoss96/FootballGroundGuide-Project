@@ -5,9 +5,10 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
 
-    <uses-feature android:name="android.hardware.camera"
+    <uses-feature
+        android:name="android.hardware.camera"
         android:required="false" />
 
     <application
@@ -28,18 +29,20 @@
         <activity android:name=".UserHomeActivity" />
         <activity
             android:name=".GroundProfileActivity"
-            android:parentActivityName=".UserHomeActivity"></activity>
+            android:parentActivityName=".UserHomeActivity" />
         <activity
             android:name=".GroundVisitedActivity"
-            android:parentActivityName=".GroundProfileActivity"></activity>
+            android:parentActivityName=".GroundProfileActivity" />
 
         <meta-data
             android:name="com.google.android.gms.version"
             android:value="@integer/google_play_services_version" />
-
         <meta-data
             android:name="com.google.android.geo.API_KEY"
-            android:value="AIzaSyD-0j_PBZ4bb4YUSUxG03ukhLmwpLEW5wc"/>
+            android:value="AIzaSyD-0j_PBZ4bb4YUSUxG03ukhLmwpLEW5wc" />
+
+        <activity android:name=".FriendProfileActivity"
+            android:parentActivityName=".UserHomeActivity"/>
     </application>
 
 </manifest>

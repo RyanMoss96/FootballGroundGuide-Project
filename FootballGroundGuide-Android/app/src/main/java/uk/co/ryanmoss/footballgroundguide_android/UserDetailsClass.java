@@ -10,13 +10,17 @@ import org.json.JSONObject;
 
 public class UserDetailsClass {
 
-    private String mUsername;
+    private String mUsername = null;
+    private String mFirstname;
+    private String mLastname;
 
     public UserDetailsClass(JSONObject response) {
         try{
 
 
             mUsername = response.getString("username");
+            mFirstname = response.getString("firstname");
+            mLastname = response.getString("lastname");
 
 
 
@@ -31,4 +35,6 @@ public class UserDetailsClass {
     {
         return mUsername;
     }
+    public String getFirstName() { return mFirstname; }
+    public String getLastName() { return mLastname; }
 }

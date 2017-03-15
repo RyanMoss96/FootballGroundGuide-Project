@@ -104,19 +104,17 @@ public class UserSettingsFragment extends Fragment {
             @Override
             public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 
-
-                FragmentManager fragmentManager = getActivity().getSupportFragmentManager();
-                FragmentTransaction fragmentTransaction = fragmentManager.beginTransaction();
-                fragmentTransaction.replace(R.id.friends_frame, new UserProfileFragment());
-                fragmentTransaction.addToBackStack(null);
-                fragmentTransaction.commit();
+                String selectedFromList =(String) (mListView.getItemAtPosition(position));
+                Intent friendActivity = new Intent(view.getContext(), FriendProfileActivity.class);
+                friendActivity.putExtra("user", selectedFromList);
+                startActivity(friendActivity);
             }
         });
 
 
     }
 
-    private void findUser(String username) {
+    private void findUser(final String username) {
 
         String URL = FIND_USER_URL + username;
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
@@ -125,11 +123,15 @@ public class UserSettingsFragment extends Fragment {
                     @Override
                     public void onResponse(JSONObject response) {
                         Log.d(TAG, response.toString());
-
                         UserDetailsClass user = new UserDetailsClass(response);
+                        if(user.getUsername() != null) {
 
-
-
+                            Intent friendActivity = new Intent(getContext(), FriendProfileActivity.class);
+                            friendActivity.putExtra("user", user.getUsername());
+                            startActivity(friendActivity);
+                        } else {
+                            Toasty.error(getActivity(), "No user found with the username " + username, Toast.LENGTH_LONG, true).show();
+                        }
                     }
                 }, new Response.ErrorListener() {
 
@@ -141,9 +143,6 @@ public class UserSettingsFragment extends Fragment {
         });
 
         VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-
-
-
     }
 
     private void getFollowers() {
