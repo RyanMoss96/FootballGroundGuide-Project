@@ -1,9 +1,17 @@
 <menu xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android">
     <item
-        android:title="Some Label"
-        android:id="@+id/set_favourite_team"
+        android:title="Mark as Visited"
+        android:id="@+id/set_visited"
         android:icon="@android:drawable/ic_menu_add"
+        android:orderInCategory="100"
+        app:showAsAction="always">
+    </item>
+
+    <item
+        android:title="Set Favourite Team"
+        android:id="@+id/set_favourite"
+        android:icon="@drawable/ic_favorite_white_24px"
         android:orderInCategory="100"
         app:showAsAction="always">
     </item>

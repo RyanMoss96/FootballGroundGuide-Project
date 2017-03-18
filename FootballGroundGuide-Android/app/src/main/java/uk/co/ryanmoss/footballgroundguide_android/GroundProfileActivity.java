@@ -4,6 +4,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.support.v4.app.Fragment;
@@ -22,6 +23,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -40,15 +42,18 @@ import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
+import es.dmoral.toasty.Toasty;
+
 public class GroundProfileActivity extends AppCompatActivity {
 
     //private String STADIUM_URL = "http://46.101.2.231/FootballGroundGuide/get_stadium_data.php";
     private String STADIUM_URL = "http://178.62.121.73/grounds/data/";
-    private String FAVOURITE_URL = "http://46.101.2.231/FootballGroundGuide/set_favourite_team.php";
+    private String FAVOURITE_URL = "http://178.62.121.73/grounds/favourite";
     private String VISITED_URL = "http://178.62.121.73/grounds/visited";
     private static final String TAG = "GroundProfile";
     final Context ctx = this;
     private FootballStadiumClass stadiumDetails;
+    private static final String PREFS_NAME = "UserDetails";
 
     private TextView teamID;
     private TextView teamName;
@@ -60,11 +65,8 @@ public class GroundProfileActivity extends AppCompatActivity {
     private ImageView mImageView;
     private Button btnVisited;
 
-
     private String strTeamName;
     private ProgressDialog progress;
-
-
 
     private Toolbar groundProfileToolbar;
     @Override
@@ -73,12 +75,10 @@ public class GroundProfileActivity extends AppCompatActivity {
         setContentView(R.layout.activity_ground_profile);
 
         progress = new ProgressDialog(ctx);
-
         progress.setMessage("Stadium Data Loading");
         progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
         progress.setIndeterminate(true);
         progress.show();
-
 
         groundProfileToolbar = (Toolbar) findViewById(R.id.footballGroundAppBar);
         setSupportActionBar(groundProfileToolbar);
@@ -87,7 +87,6 @@ public class GroundProfileActivity extends AppCompatActivity {
 
         groundProfileToolbar.setTitle(strTeamName);
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
-
 
         teamName = (TextView) findViewById(R.id.txtTeamName);
         teamFounded = (TextView) findViewById(R.id.txtTeamFounded);
@@ -111,8 +110,6 @@ public class GroundProfileActivity extends AppCompatActivity {
                 startActivity(groundVisited);
             }
         });
-
-
     }
 
     @Override
@@ -129,8 +126,12 @@ public class GroundProfileActivity extends AppCompatActivity {
             case android.R.id.home:
                 NavUtils.navigateUpFromSameTask(this);
                 return true;
-            case R.id.set_favourite_team:
+            case R.id.set_favourite:
                 setFavTeamDialog();
+                return true;
+            case R.id.set_visited:
+                visitedActivity();
+                return true;
         }
         return super.onOptionsItemSelected(item);
     }
@@ -138,10 +139,6 @@ public class GroundProfileActivity extends AppCompatActivity {
     public void getStadiumData(String stadium) {
 
         Log.d(TAG, stadium);
-
-
-
-
             String URL = STADIUM_URL + stadium;
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
@@ -160,13 +157,9 @@ public class GroundProfileActivity extends AppCompatActivity {
                 public void onErrorResponse(VolleyError error) {
                     VolleyLog.d(TAG, "Error: " + error.getMessage());
 
-
                 }
             });
-
             VolleyRequestQueue.getInstance(ctx).addToRequestQueue(jsonObjReq);
-
-
     }
 
 
@@ -201,9 +194,8 @@ public class GroundProfileActivity extends AppCompatActivity {
 
         builder.setPositiveButton(R.string.string_yes, new DialogInterface.OnClickListener() {
             public void onClick(DialogInterface dialog, int id) {
-                //setFavTeamConnection();
-                Intent registerIntent = new Intent(ctx, GroundVisitedActivity.class);
-                startActivity(registerIntent);
+                setFavTeamConnection();
+
 
 
             }
@@ -220,11 +212,23 @@ public class GroundProfileActivity extends AppCompatActivity {
         dialog.show();
     }
 
+    private void visitedActivity() {
+        Intent registerIntent = new Intent(ctx, GroundVisitedActivity.class);
+        registerIntent.putExtra("id", stadiumDetails.getTeamID());
+        startActivity(registerIntent);
+    }
+
     private void setFavTeamConnection()
     {
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String uid = settings.getString("uid", null);
         JSONObject js = new JSONObject();
         try{
-            js.put("favourite", strTeamName);
+            Log.d(TAG, uid);
+            js.put("favourite", stadiumDetails.getTeamID());
+            js.put("user", uid);
+            Log.d(TAG, js.toString());
 
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                     Request.Method.POST,FAVOURITE_URL, js,
@@ -239,7 +243,7 @@ public class GroundProfileActivity extends AppCompatActivity {
 
                 @Override
                 public void onErrorResponse(VolleyError error) {
-                    VolleyLog.d(TAG, "Error: " + error.getMessage());
+                    Log.d(TAG, "Error: " + error.getMessage());
 
                 }
             });
@@ -249,8 +253,6 @@ public class GroundProfileActivity extends AppCompatActivity {
         {
 
         }
-
-
     }
 
     private void markVisited() {

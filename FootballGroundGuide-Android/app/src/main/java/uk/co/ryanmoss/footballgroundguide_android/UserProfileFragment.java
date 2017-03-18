@@ -1,6 +1,8 @@
 package uk.co.ryanmoss.footballgroundguide_android;
 
+import android.app.ProgressDialog;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.annotation.NonNull;
@@ -19,6 +21,8 @@ import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.squareup.picasso.Picasso;
 
+import org.json.JSONArray;
+import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
@@ -28,15 +32,18 @@ public class UserProfileFragment extends Fragment {
 
     private static final String BUNDLE_VALUE_KEY = "user";
     private static final String TAG = "UserProfileFragment";
+    private static final String PREFS_NAME = "UserDetails";
 
     private ImageView mProfilePic;
     private TextView mUsername;
     private TextView mName;
+    private TextView mFavourite;
 
     private String USER_URL = "http://178.62.121.73/users/";
+    private String FAVOURITE_URL = "http://178.62.121.73/users/favourite/";
 
     private UserDetailsClass userDetails;
-
+    private ProgressDialog progress;
     private String user = null;
     public UserProfileFragment() {
         // Required empty public constructor
@@ -51,6 +58,9 @@ public class UserProfileFragment extends Fragment {
         if(args != null){
            user = args.getString(BUNDLE_VALUE_KEY,null);
 
+        } else {
+            SharedPreferences settings = getActivity().getSharedPreferences(PREFS_NAME, 0);
+            user = settings.getString("username", null);
         }
 
     }
@@ -64,13 +74,24 @@ public class UserProfileFragment extends Fragment {
 
     public void onViewCreated(View view, Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+
         mProfilePic = (ImageView) getView().findViewById(R.id.userProfileImage);
         mUsername = (TextView) getView().findViewById(R.id.txtUsername);
         mName = (TextView) getView().findViewById(R.id.txtName);
+        mFavourite = (TextView) getView().findViewById(R.id.txtFavouriteTeam);
 
         if(user != null) {
+            progress = new ProgressDialog(getActivity());
+
+            progress.setMessage("Loading User Data");
+            progress.setProgressStyle(ProgressDialog.STYLE_HORIZONTAL);
+            progress.setIndeterminate(true);
+            progress.show();
+
             mUsername.setText(user);
             getUserData(user);
+
 
 
         }
@@ -78,6 +99,7 @@ public class UserProfileFragment extends Fragment {
 
 
         loadProfilePicture();
+
     }
 
     private void loadProfilePicture() {
@@ -103,23 +125,53 @@ public class UserProfileFragment extends Fragment {
 
                         userDetails = new UserDetailsClass(response);
                         mName.setText(userDetails.getFirstName() + " " + userDetails.getLastName());
-
-                        Log.d(TAG, userDetails.getFirstName() + " " + userDetails.getLastName());
+                        getFavouriteTeam();
+                        Log.d(TAG, userDetails.getUID() + " " + userDetails.getLastName());
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-
-
             }
         });
 
         VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
     }
 
+    private void getFavouriteTeam() {
 
+        String BASE_URL = FAVOURITE_URL + userDetails.getUID();
+
+
+            JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                    Request.Method.GET,BASE_URL, null,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            try{
+                                if(response.has("favourite")) {
+                                    JSONArray listArray = response.getJSONArray("favourite");
+                                    JSONObject row = listArray.getJSONObject(0);
+                                    userDetails.setTeam(row.getString("team_name"));
+                                    mFavourite.setText(userDetails.getTeam());
+                                    Log.d(TAG, userDetails.getTeam());
+                                }
+                                progress.dismiss();
+                            } catch(JSONException e) {
+                                progress.dismiss();
+                            }
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(TAG, "Error: " + error.getMessage());
+                    progress.dismiss();
+                }
+            });
+
+            VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
+    }
 
     @NonNull
     public static UserProfileFragment newInstance() {

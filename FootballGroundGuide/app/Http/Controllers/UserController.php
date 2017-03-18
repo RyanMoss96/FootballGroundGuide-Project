@@ -17,6 +17,8 @@ class UserController extends Controller
 
     public function show($username) {
          $users = DB::table('users')->where('username', $username)->first();
+
+         
          return response()->json($users);
     }
 
@@ -108,6 +110,22 @@ class UserController extends Controller
         }
 
         return response()->json($response);
+    }
+
+    public function favourite($user) {
+        $teams = DB::table('teams')
+                    ->select('team_name')
+                    ->join('favourite_team', 'favourite_team.team_id', '=', 'teams.team_id')
+                    ->where('favourite_team.uid', $user)
+                    ->get();
+
+            $response = array();
+
+        
+        foreach($teams as $team) {
+            $response["favourite"][] = $team;
+        }
+        echo json_encode ( $response );
     }
    
 }

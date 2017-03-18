@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.media.Rating;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.ImageButton;
+import android.widget.RatingBar;
 import android.widget.Toast;
 
 import com.android.volley.AuthFailureError;
@@ -34,6 +36,8 @@ import java.io.IOException;
 import java.util.Hashtable;
 import java.util.Map;
 
+import es.dmoral.toasty.Toasty;
+
 import static android.R.attr.bitmap;
 
 public class GroundVisitedActivity extends AppCompatActivity {
@@ -42,6 +46,7 @@ public class GroundVisitedActivity extends AppCompatActivity {
     private ImageButton btnCamera;
     private EditText txtDesc;
     private Button btnUpload;
+    private RatingBar ratings;
 
     private Bitmap bitmap;
     private Bitmap resized;
@@ -52,9 +57,11 @@ public class GroundVisitedActivity extends AppCompatActivity {
     private int PICK_IMAGE_REQUEST = 1;
 
     private static final String TAG = "GroundVisitedActivity";
-    //private String UPLOAD_URL ="http://46.101.2.231/FootballGroundGuide/ground_visited.php";
     private String UPLOAD_URL ="http://178.62.121.73/grounds/visited";
     final Context ctx = this;
+    private static final String PREFS_NAME = "UserDetails";
+
+    private String groundID;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -67,8 +74,11 @@ public class GroundVisitedActivity extends AppCompatActivity {
         btnCamera = (ImageButton) findViewById(R.id.btn_image);
         btnUpload = (Button) findViewById(R.id.btn_upload);
         txtDesc = (EditText) findViewById(R.id.txt_description);
+        ratings = (RatingBar) findViewById(R.id.ratingBar);
 
-        String groundID = getIntent().getExtras().getString("ground_id");
+        ratings.setMax(5);
+
+        groundID = getIntent().getExtras().getString("id");
 
         btnCamera.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -84,7 +94,7 @@ public class GroundVisitedActivity extends AppCompatActivity {
             public void onClick(View v) {
                 //dispatchTakePictureIntent();
 
-                uploadImage();
+                setVisited();
             }
         });
 
@@ -134,10 +144,14 @@ public class GroundVisitedActivity extends AppCompatActivity {
         return encodedImage;
     }
 
-    private void uploadImage(){
+    private void upload(){
 
         JSONObject js = new JSONObject();
         String name = txtDesc.getText().toString();
+        float rating = ratings.getRating();
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        String uid = settings.getString("uid", null);
 
 
 
@@ -145,6 +159,9 @@ public class GroundVisitedActivity extends AppCompatActivity {
         try{
             js.put("image", getStringImage(resized));
             js.put("name", name );
+            js.put("rating", rating);
+            js.put("ground", groundID);
+            js.put("user", uid);
 
             Log.e("js",  getStringImage(resized));
             JsonObjectRequest jsonObjReq = new JsonObjectRequest(
@@ -153,8 +170,6 @@ public class GroundVisitedActivity extends AppCompatActivity {
                         @Override
                         public void onResponse(JSONObject response) {
                             Log.d(TAG, response.toString());
-                            Toast.makeText(ctx, "Success", Toast.LENGTH_LONG).show();
-
                             try{
                                 String  strSuccess = response.getString("code");
                                 Log.d(TAG, strSuccess);
@@ -162,8 +177,6 @@ public class GroundVisitedActivity extends AppCompatActivity {
                             {
                                 Log.d(TAG, e.toString());
                             }
-
-
 
                         }
                     }, new Response.ErrorListener() {
@@ -182,5 +195,11 @@ public class GroundVisitedActivity extends AppCompatActivity {
         {
             Log.e(TAG, e.toString());
         }
+    }
+
+
+    private void setVisited() {
+
+        upload();
     }
 }

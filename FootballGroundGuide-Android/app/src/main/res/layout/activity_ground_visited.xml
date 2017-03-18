@@ -35,8 +35,32 @@
         android:layout_height="match_parent"
         android:layout_alignParentBottom="true"
         android:layout_alignParentStart="true"
-        android:layout_marginBottom="14dp"
-        >
+        android:layout_marginBottom="14dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Ground Rating"
+            android:textAppearance="@style/TextAppearance.AppCompat.Subhead"
+            android:layout_gravity="left"/>/>
+
+        <RatingBar
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:id="@+id/ratingBar"
+            android:layout_gravity="center"/>
+
+        <EditText
+            android:id="@+id/txt_description"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:inputType="text"
+            android:layout_marginTop="8dp"
+            android:layout_marginBottom="8dp"
+            android:hint="@string/image_description"
+            android:layout_below="@+id/txt_description"
+            android:layout_gravity="center"
+            />
 
         <ImageButton
             android:layout_width="match_parent"
@@ -44,19 +68,13 @@
             app:srcCompat="@android:drawable/ic_menu_camera"
             android:id="@+id/btn_image" />
 
-        <EditText
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:inputType="textMultiLine"
-            android:ems="10"
-            android:id="@+id/txt_description"
-            android:layout_below="@id/btn_image"/>
-
         <Button
             android:text="@string/button_upload"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:id="@+id/btn_upload" />
+
+
     </LinearLayout>
     </ScrollView>
 

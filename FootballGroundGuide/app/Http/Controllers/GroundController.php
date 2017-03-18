@@ -50,17 +50,50 @@ class GroundController extends Controller
     {
         $image= $data->image;
         $name = $data->name;
+        $rating = $data->rating;
+        $ground = $data->ground;
+        $user = $data->user;
 
+        
  
         $actualpath = public_path() . "/stadium_images/" . $name . ".png";
-        
-        
- 
- 
         $test = file_put_contents($actualpath,base64_decode($image));
+
+        $id = DB::table('reviews')->insertGetId(
+            ['team_id' => $ground, 'user_id' => $user, 'overall_score' => $rating, 'user_review' => $name]
+        );
+
+        DB::table('images')->insert(
+          ['image_url' => $actualpath, 'team_id' => $ground, 'review_id' => $id, 'user_id' => $user]
+        );
         $response = array();
 
         $response["code"] = $image;
+        
+        echo json_encode ( $response );
+    }
+
+    public function favourite(Request $request) {
+        $data = $request->all();
+
+        $team = $data['favourite'];
+        $user = $data['user'];
+
+        $fav = DB::table('favourite_team')->where('uid', $user)->first();
+        
+        $response = array();
+        if($fav != null){
+            DB::table('favourite_team')
+                ->where('uid', $user)
+                ->update(['team_id' => $team]);
+                $response["code"] = "updated";
+        } else {
+            DB::table('favourite_team')->insert(['uid' => $user, 'team_id' => $team]);
+            $response["code"] = "set";
+
+        }
+
+        
         
         echo json_encode ( $response );
     }

@@ -45,6 +45,9 @@
     <string name="button_visited">Mark as Visited!</string>
 
     //Ground Visited
-    <string name="button_upload">Upload</string>
+    <string name="button_upload">Submit</string>
+    <string name="image_description">Description</string>
+
+
 
 </resources>
