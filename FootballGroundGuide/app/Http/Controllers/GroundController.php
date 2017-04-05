@@ -57,14 +57,19 @@ class GroundController extends Controller
         
  
         $actualpath = public_path() . "/stadium_images/" . $name . ".png";
+        $path = "/stadium_images/" . $name . ".png";
         $test = file_put_contents($actualpath,base64_decode($image));
 
         $id = DB::table('reviews')->insertGetId(
             ['team_id' => $ground, 'user_id' => $user, 'overall_score' => $rating, 'user_review' => $name]
         );
 
+        DB::table('visited_stadiums')->insert(
+            ['stadium_id' => $ground, 'user_id' => $user]
+        );
+
         DB::table('images')->insert(
-          ['image_url' => $actualpath, 'team_id' => $ground, 'review_id' => $id, 'user_id' => $user]
+          ['image_url' => $path, 'team_id' => $ground, 'review_id' => $id, 'user_id' => $user]
         );
         $response = array();
 
@@ -92,9 +97,6 @@ class GroundController extends Controller
             $response["code"] = "set";
 
         }
-
-        
-        
         echo json_encode ( $response );
     }
     

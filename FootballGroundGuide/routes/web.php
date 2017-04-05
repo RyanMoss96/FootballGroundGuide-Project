@@ -31,6 +31,7 @@ Route::post('/users/login', 'UserController@login');
 Route::get('/users/{username}', 'UserController@show');
 Route::get('/users/followers/{id}', 'UserController@followers');
 Route::get('/users/favourite/{user}', 'UserController@favourite');
+Route::get('/users/images/{user}', 'UserController@images');
 
 
 Route::get('/grounds/{league}', 'GroundController@show');
@@ -38,4 +39,6 @@ Route::get('/grounds/data/{team}', 'GroundController@data');
 Route::post('/grounds/visited/', 'GroundController@visited');
 Route::post('/grounds/favourite/', 'GroundController@favourite');
 
+
+Route::get('/friends/visited/{user}', 'FriendsController@visited');
 

@@ -11,6 +11,8 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.BaseAdapter;
+import android.widget.GridView;
 import android.widget.ImageView;
 import android.widget.TextView;
 
@@ -19,11 +21,13 @@ import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.android.volley.toolbox.StringRequest;
 import com.squareup.picasso.Picasso;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
+import org.w3c.dom.Text;
 
 import java.util.ArrayList;
 
@@ -38,13 +42,20 @@ public class UserProfileFragment extends Fragment {
     private TextView mUsername;
     private TextView mName;
     private TextView mFavourite;
+    private TextView mVisited;
+    private GridView gridview;
 
     private String USER_URL = "http://178.62.121.73/users/";
     private String FAVOURITE_URL = "http://178.62.121.73/users/favourite/";
+    private String IMAGES_URL = "http://178.62.121.73/users/images/";
+    private String VISITED_URL = "http://178.62.121.73/friends/visited/";
 
     private UserDetailsClass userDetails;
     private ProgressDialog progress;
     private String user = null;
+    private String[] images;
+    private ArrayList<String> responseList = new ArrayList<>();;
+
     public UserProfileFragment() {
         // Required empty public constructor
     }
@@ -80,6 +91,10 @@ public class UserProfileFragment extends Fragment {
         mUsername = (TextView) getView().findViewById(R.id.txtUsername);
         mName = (TextView) getView().findViewById(R.id.txtName);
         mFavourite = (TextView) getView().findViewById(R.id.txtFavouriteTeam);
+        mVisited = (TextView) getView().findViewById(R.id.txtGroundsVisited);
+        gridview = (GridView) getView().findViewById(R.id.gridview);
+
+
 
         if(user != null) {
             progress = new ProgressDialog(getActivity());
@@ -90,8 +105,14 @@ public class UserProfileFragment extends Fragment {
             progress.show();
 
             mUsername.setText(user);
+
             getUserData(user);
 
+
+            if(responseList.size() != 0)
+            {
+                gridview.setAdapter(new ImageAdapter(getActivity(), responseList));
+            }
 
 
         }
@@ -103,6 +124,8 @@ public class UserProfileFragment extends Fragment {
     }
 
     private void loadProfilePicture() {
+
+
         Picasso picasso = Picasso.with(getActivity());
         picasso.setIndicatorsEnabled(true);
         picasso.setLoggingEnabled(true);
@@ -125,7 +148,11 @@ public class UserProfileFragment extends Fragment {
 
                         userDetails = new UserDetailsClass(response);
                         mName.setText(userDetails.getFirstName() + " " + userDetails.getLastName());
+                        getVisited();
+                        getImages();
+
                         getFavouriteTeam();
+
                         Log.d(TAG, userDetails.getUID() + " " + userDetails.getLastName());
                     }
                 }, new Response.ErrorListener() {
@@ -167,12 +194,86 @@ public class UserProfileFragment extends Fragment {
                 public void onErrorResponse(VolleyError error) {
                     Log.d(TAG, "Error: " + error.getMessage());
                     progress.dismiss();
+                    mFavourite.setVisibility(View.INVISIBLE);
                 }
             });
 
             VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
     }
 
+
+    private void getVisited() {
+
+        String BASE_URL = VISITED_URL + userDetails.getUID();
+
+
+        StringRequest stringRequest = new StringRequest(Request.Method.GET, BASE_URL,
+                new Response.Listener<String>() {
+                    @Override
+                    public void onResponse(String response) {
+                        Log.d(TAG, response.toString());
+                        mVisited.setText("Stadiums Visited: " + response.toString());
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+
+            }
+        });
+
+        VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(stringRequest);
+    }
+
+    private void getImages(){
+        String BASE_URL = IMAGES_URL + userDetails.getUID();
+
+
+        JsonObjectRequest jsonObjReq = new JsonObjectRequest(
+                Request.Method.GET,BASE_URL, null,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try{
+
+
+                            JSONArray listArray = response.getJSONArray("images");
+                            images = new String[listArray.length()];
+                            for(int i = 0; i <= listArray.length();i++)
+                            {
+                                JSONObject row = listArray.getJSONObject(i);
+
+                                String name = row.getString("image_url");
+
+                                responseList.add(name);
+
+                                Log.d(TAG, responseList.toString());
+
+                            }
+                            gridview.setAdapter(new ImageAdapter(getActivity(), responseList));
+
+
+                        } catch (JSONException e)
+                        {
+
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d(TAG, "Error: " + error.getMessage());
+
+
+            }
+        });
+
+        VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
+    }
+
+    private void parseImages(JSONObject response) {
+
+
+
+    }
     @NonNull
     public static UserProfileFragment newInstance() {
         return new UserProfileFragment();
@@ -188,3 +289,4 @@ public class UserProfileFragment extends Fragment {
     }
 
 }
+

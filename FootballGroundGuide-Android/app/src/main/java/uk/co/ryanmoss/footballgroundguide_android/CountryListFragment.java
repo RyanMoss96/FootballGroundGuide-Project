@@ -86,28 +86,17 @@ public class CountryListFragment extends Fragment {
             groundListView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 public void onItemClick(AdapterView<?> parent, View view,
                                         int position, long id) {
-
-
-
                     String selectedCountry = groundListView.getItemAtPosition(position).toString().trim();
                     Log.d(TAG, selectedCountry);
                     leagueController.league(selectedCountry);
-
-
                 }
             });
         }
-
-
-
-
     }
 
     public void getCountries() {
 
         JSONObject js = new JSONObject();
-
-
         JsonObjectRequest jsonObjReq = new JsonObjectRequest(
                 Request.Method.GET,COUNTRY_URL, js,
                 new Response.Listener<JSONObject>() {
@@ -117,20 +106,16 @@ public class CountryListFragment extends Fragment {
                         ArrayList<String> responseList;
                         responseList =  createArrayList(response);
                         setListContent(responseList);
-
                     }
                 }, new Response.ErrorListener() {
 
             @Override
             public void onErrorResponse(VolleyError error) {
                 VolleyLog.d(TAG, "Error: " + error.getMessage());
-
             }
         });
 
         VolleyRequestQueue.getInstance(getActivity()).addToRequestQueue(jsonObjReq);
-
-
     }
 
 
@@ -148,11 +133,7 @@ public class CountryListFragment extends Fragment {
                 responseList.add(name);
                 Log.d(TAG, name);
             }
-        } catch (JSONException e)
-        {
-
-        }
-
+        } catch (JSONException e) {}
 
         return responseList;
     }

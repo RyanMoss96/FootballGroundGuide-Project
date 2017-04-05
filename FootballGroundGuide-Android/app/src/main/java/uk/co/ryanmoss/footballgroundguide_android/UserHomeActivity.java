@@ -80,7 +80,7 @@ public class UserHomeActivity extends AppCompatActivity implements FragmentContr
                 getSupportFragmentManager().findFragmentById(R.id.leagueFrag);
 
 
-        // Create fragment and give it an argument for the selected article
+
         LeagueListFragment newFragment = new LeagueListFragment();
         Bundle args = new Bundle();
         args.putSerializable("country", country);
@@ -88,12 +88,11 @@ public class UserHomeActivity extends AppCompatActivity implements FragmentContr
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations( R.anim.slide_in_right, R.anim.slide_out_left, android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
+
         transaction.replace(R.id.root_frame, newFragment);
         transaction.addToBackStack(null);
 
-        // Commit the transaction
+
         transaction.commit();
 
     }
@@ -103,11 +102,8 @@ public class UserHomeActivity extends AppCompatActivity implements FragmentContr
     public void ground(String league) {
         GroundListFragment groundFrag = (GroundListFragment)
                 getSupportFragmentManager().findFragmentById(R.id.groundFrag);
-
-
         SAVED_LEAGUE = league;
 
-        // Create fragment and give it an argument for the selected article
         GroundListFragment newFragment = new GroundListFragment();
         Bundle args = new Bundle();
         args.putSerializable("league", league);
@@ -115,15 +111,11 @@ public class UserHomeActivity extends AppCompatActivity implements FragmentContr
 
         FragmentTransaction transaction = getSupportFragmentManager().beginTransaction();
         transaction.setCustomAnimations( R.anim.slide_in_right, R.anim.slide_out_left, android.R.anim.slide_in_left,android.R.anim.slide_out_right);
-        // Replace whatever is in the fragment_container view with this fragment,
-        // and add the transaction to the back stack so the user can navigate back
+
         transaction.replace(R.id.root_frame, newFragment);
         transaction.addToBackStack(null);
 
-
-        // Commit the transaction
         transaction.commit();
-
     }
 
     class ViewPagerAdapter extends FragmentPagerAdapter {

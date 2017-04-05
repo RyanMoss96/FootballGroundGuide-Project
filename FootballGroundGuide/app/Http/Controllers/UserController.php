@@ -127,5 +127,19 @@ class UserController extends Controller
         }
         echo json_encode ( $response );
     }
+
+    public function images($user) {
+        $images = DB::table('images')->select('image_url')->where('user_id', $user)->get();
+
+
+  $response = array();
+
+        
+        foreach($images as $image) {
+            $response["images"][] = $image;
+        }
+        echo json_encode ( $response );
+        
+    }
    
 }
