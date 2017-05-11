@@ -10,6 +10,7 @@ import android.os.Bundle;
 import android.text.TextUtils;
 import android.util.Log;
 import android.util.Pair;
+import android.util.Patterns;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
@@ -27,6 +28,7 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.regex.Pattern;
 
 import es.dmoral.toasty.Toasty;
 
@@ -60,6 +62,8 @@ public class RegisterActivity extends AppCompatActivity {
         txtPassword = (EditText) findViewById(R.id.txt_password);
         txtConfirmPass = (EditText) findViewById(R.id.txt_confirm_password);
 
+
+        
         loginLabel.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
@@ -184,9 +188,7 @@ public class RegisterActivity extends AppCompatActivity {
         return isConnected;
     }
 
-    public final static boolean isValidEmail(CharSequence target) {
-        return !TextUtils.isEmpty(target) && android.util.Patterns.EMAIL_ADDRESS.matcher(target).matches();
-    }
+
 
     private void showLoginScreen()
     {

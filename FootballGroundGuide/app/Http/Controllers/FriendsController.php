@@ -25,4 +25,21 @@ class FriendsController extends Controller
 return $counter;
          
     }
+
+
+    public function add(Request $data) {
+         $user = $data->user;
+         $uid = $data->uid;
+         $users = DB::table('users')->where('username', $user)->first();
+
+        
+                $id = $users->uid;
+                
+            
+
+         DB::table('friends')->insert(
+            ['user_one' => $uid, 'user_two' => $id]
+        );
+
+    }
 }

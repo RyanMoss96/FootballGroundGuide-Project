@@ -41,4 +41,5 @@ Route::post('/grounds/favourite/', 'GroundController@favourite');
 
 
 Route::get('/friends/visited/{user}', 'FriendsController@visited');
+Route::post('/friends/add', 'FriendsController@add');
 

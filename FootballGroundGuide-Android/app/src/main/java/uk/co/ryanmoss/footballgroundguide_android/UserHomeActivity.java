@@ -1,16 +1,22 @@
 package uk.co.ryanmoss.footballgroundguide_android;
 
+import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.Uri;
 import android.support.design.widget.TabLayout;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentPagerAdapter;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NavUtils;
 import android.support.v4.view.ViewPager;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -24,7 +30,7 @@ public class UserHomeActivity extends AppCompatActivity implements FragmentContr
     private ViewPager viewPager;
 
     private static final String TAG = "UserHomeActivity";
-
+    private static final String PREFS_NAME = "UserDetails";
     private String SAVED_LEAGUE;
 
 
@@ -46,6 +52,43 @@ public class UserHomeActivity extends AppCompatActivity implements FragmentContr
 
 
     }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        MenuInflater inflater = getMenuInflater();
+        inflater.inflate(R.menu.home, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()) {
+            case R.id.logout:
+                logout();
+                return true;
+
+        }
+        return super.onOptionsItemSelected(item);
+    }
+
+    public void logout() {
+
+        SharedPreferences settings = getSharedPreferences(PREFS_NAME, 0);
+        SharedPreferences.Editor editor = settings.edit();
+        editor.putString("username", null);
+        editor.putString("password", null);
+        editor.putString("firstName", null);
+        editor.putString("lastName", null);
+        editor.putString("email", null);
+
+        editor.putString("uid", null);
+
+        editor.commit();
+        Intent homeIntent = new Intent(this, LoginActivity.class);
+        startActivity(homeIntent);
+    }
+
+
 
     @Override
     public void onSaveInstanceState(Bundle savedInstanceState) {

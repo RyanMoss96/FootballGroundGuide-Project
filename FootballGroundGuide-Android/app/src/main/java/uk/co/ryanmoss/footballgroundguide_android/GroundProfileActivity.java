@@ -31,6 +31,15 @@ import com.android.volley.VolleyError;
 import com.android.volley.VolleyLog;
 import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
+import com.google.android.gms.maps.CameraUpdateFactory;
+import com.google.android.gms.maps.GoogleMap;
+import com.google.android.gms.maps.MapFragment;
+import com.google.android.gms.maps.OnMapReadyCallback;
+import com.google.android.gms.maps.SupportMapFragment;
+import com.google.android.gms.maps.model.CameraPosition;
+import com.google.android.gms.maps.model.LatLng;
+import com.google.android.gms.maps.model.Marker;
+import com.google.android.gms.maps.model.MarkerOptions;
 import com.squareup.picasso.MemoryPolicy;
 import com.squareup.picasso.NetworkPolicy;
 import com.squareup.picasso.Picasso;
@@ -44,7 +53,8 @@ import java.util.ArrayList;
 
 import es.dmoral.toasty.Toasty;
 
-public class GroundProfileActivity extends AppCompatActivity {
+public class GroundProfileActivity extends AppCompatActivity implements
+        OnMapReadyCallback {
 
     //private String STADIUM_URL = "http://46.101.2.231/FootballGroundGuide/get_stadium_data.php";
     private String STADIUM_URL = "http://178.62.121.73/grounds/data/";
@@ -62,11 +72,15 @@ public class GroundProfileActivity extends AppCompatActivity {
     private TextView byTrain;
     private TextView byCar;
     private TextView capacity;
+    private TextView details;
     private ImageView mImageView;
     private Button btnVisited;
+    private SupportMapFragment mapFragment;
+    private GoogleMap mMap;
 
     private String strTeamName;
     private ProgressDialog progress;
+
 
     private Toolbar groundProfileToolbar;
     @Override
@@ -94,7 +108,13 @@ public class GroundProfileActivity extends AppCompatActivity {
         byTrain = (TextView) findViewById(R.id.txtTrainInfo);
         byCar = (TextView) findViewById(R.id.txtCarInfo);
         capacity = (TextView) findViewById(R.id.txtCapacity);
+        details = (TextView) findViewById(R.id.txtDetails);
         mImageView = (ImageView) findViewById(R.id.imageView);
+
+        mapFragment = (SupportMapFragment) getSupportFragmentManager()
+                .findFragmentById(R.id.map);
+        mapFragment.getMapAsync(this);
+
 
         btnVisited = (Button) findViewById(R.id.VisitedButton);
         getStadiumImage("http://46.101.2.231/FootballGroundGuide/stadium_images/deepdale1.jpg");
@@ -110,6 +130,8 @@ public class GroundProfileActivity extends AppCompatActivity {
                 startActivity(groundVisited);
             }
         });
+
+
     }
 
     @Override
@@ -149,7 +171,7 @@ public class GroundProfileActivity extends AppCompatActivity {
                             Log.d(TAG, response.toString());
                             stadiumDetails = new FootballStadiumClass(response);
                             setGroundProfileTextInfo();
-                            getStadiumImage("http://46.101.2.231/FootballGroundGuide/stadium_images/deepdale.jpg");
+
                         }
                     }, new Response.ErrorListener() {
 
@@ -171,6 +193,28 @@ public class GroundProfileActivity extends AppCompatActivity {
         byTrain.setText(stadiumDetails.getTrainInfo());
         byCar.setText(stadiumDetails.getCarInfo());
         capacity.setText(stadiumDetails.getCapacity());
+        details.setText(stadiumDetails.getDetails());
+
+        getStadiumImage(stadiumDetails.getImage());
+
+
+        mMap.addMarker(new MarkerOptions()
+                .position(new LatLng(stadiumDetails.getLatitude(), stadiumDetails.getLongitude()))
+                .title(stadiumDetails.getTeamName()));
+
+        //Build camera position
+        CameraPosition cameraPosition = new CameraPosition.Builder()
+                .target(new LatLng(stadiumDetails.getLatitude(), stadiumDetails.getLongitude()))
+                .zoom(14).build();
+        //Zoom in and animate the camera.
+        mMap.animateCamera(CameraUpdateFactory.newCameraPosition(cameraPosition));
+
+    }
+
+    @Override
+    public void onMapReady(GoogleMap map) {
+        mMap = map;
+
     }
 
     private void getStadiumImage(String image_url)
